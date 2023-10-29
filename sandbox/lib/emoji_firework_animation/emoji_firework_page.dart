@@ -18,7 +18,7 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage>
       emojiFloatYAnimation,
       emojiFloatXAnimation,
       emojiLifeTimeAnimation;
-  late List<Widget> emojiWidgetList;
+  late List<EmojiWidget> emojiWidgetList;
   late Duration _emojiLifetimeDuration = Duration(seconds: 5);
   late Duration _emojiShootDuration = Duration(seconds: 2);
 
@@ -72,15 +72,34 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage>
     });
     emojiLifeTimeAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        emojiAnimationFloatController.reverse(from: 0.0);
-        emojiAnimationShootController.reverse(from: 0.0);
-        emojiLifeTimeAnimationController.reverse(from: 0.0);
+        // emojiAnimationFloatController.reverse(from: 0.0);
+        // emojiAnimationShootController.reverse(from: 0.0);
+        // emojiLifeTimeAnimationController.reverse(from: 0.0);
       }
     });
+
+    emojiWidgetList = List.generate(
+      50,
+      (index) => EmojiWidget(
+        emojiFloatXAnimation: emojiFloatXAnimation,
+        emojiFloatYAnimation: emojiFloatYAnimation,
+        emojiShootAnimation: emojiShootAnimation,
+        emojiLifeTimeAnimation: emojiLifeTimeAnimation,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    // emojiWidgetList = List.generate(
+    //   50,
+    //   (index) => EmojiWidget(
+    //     emojiFloatXAnimation: emojiFloatXAnimation,
+    //     emojiFloatYAnimation: emojiFloatYAnimation,
+    //     emojiShootAnimation: emojiShootAnimation,
+    //     emojiLifeTimeAnimation: emojiLifeTimeAnimation,
+    //   ),
+    // );
     return Scaffold(
       appBar: AppBar(title: Text("Emoji Firework")),
       body: Container(
@@ -103,19 +122,19 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage>
                       Container(
                         width: 50,
                         height: 50,
-                        // color: Colors.amber,
                         child: Stack(
                           clipBehavior: Clip.none,
                           alignment: Alignment.center,
-                          children: List.generate(
-                            50,
-                            (index) => EmojiWidget(
-                              emojiFloatXAnimation: emojiFloatXAnimation,
-                              emojiFloatYAnimation: emojiFloatYAnimation,
-                              emojiShootAnimation: emojiShootAnimation,
-                              emojiLifeTimeAnimation: emojiLifeTimeAnimation,
-                            ),
-                          ),
+                          // children: List.generate(
+                          //   50,
+                          //   (index) => EmojiWidget(
+                          //     emojiFloatXAnimation: emojiFloatXAnimation,
+                          //     emojiFloatYAnimation: emojiFloatYAnimation,
+                          //     emojiShootAnimation: emojiShootAnimation,
+                          //     emojiLifeTimeAnimation: emojiLifeTimeAnimation,
+                          //   ),
+                          // ),
+                          children: emojiWidgetList,
                         ),
                       ),
                       const Text(
@@ -128,6 +147,15 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage>
                 bottom: 30,
                 child: ElevatedButton(
                   onPressed: () {
+                    emojiWidgetList = List.generate(
+                      50,
+                      (index) => EmojiWidget(
+                        emojiFloatXAnimation: emojiFloatXAnimation,
+                        emojiFloatYAnimation: emojiFloatYAnimation,
+                        emojiShootAnimation: emojiShootAnimation,
+                        emojiLifeTimeAnimation: emojiLifeTimeAnimation,
+                      ),
+                    );
                     setState(() {
                       emojiAnimationShootController.forward(from: 0.0);
                       emojiAnimationFloatController.forward(from: 0.0);
@@ -165,7 +193,6 @@ class EmojiWidgetState extends State<EmojiWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     xScale = Random().nextDouble() * 2 - 1;
@@ -202,8 +229,8 @@ class EmojiWidgetState extends State<EmojiWidget> {
         opacity: isEmojiTransparent ? 0.0 : 1.0,
         child: Image(
           image: AssetImage("images/heart_icon.png"),
-          width: 30 * emojiScale,
-          height: 30 * emojiScale,
+          width: 40 * emojiScale,
+          height: 40 * emojiScale,
         ),
       ),
     );
