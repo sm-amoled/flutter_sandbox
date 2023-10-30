@@ -5,13 +5,16 @@ import 'package:sandbox/emoji_firework_animation/emoji_firework_widget.dart';
 
 class EmojiFireworkPage extends StatefulWidget {
   EmojiFireworkPage({super.key});
-  late Map<Key, FireworkWidget> fireworkWidgets = {};
   @override
   State<EmojiFireworkPage> createState() => _EmojiFireworkPageState();
 }
 
 class _EmojiFireworkPageState extends State<EmojiFireworkPage>
     with TickerProviderStateMixin {
+  late Map<Key, FireworkWidget> fireworkWidgets = {};
+  EmojiFireWork emojiFireWork =
+      EmojiFireWork(emojiAsset: const AssetImage('images/heart_icon.png'));
+
   @override
   void initState() {
     super.initState();
@@ -39,7 +42,7 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage>
                 alignment: Alignment.center,
                 children: [
                   Stack(
-                    children: widget.fireworkWidgets.values.toList(),
+                    children: emojiFireWork.fireworkWidgets.values.toList(),
                   ),
                   const Text(
                     "💣",
@@ -52,8 +55,10 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage>
               bottom: 30,
               child: ElevatedButton(
                 onPressed: () {
-                  setFireworkWidget();
-                  print(widget.fireworkWidgets.length);
+                  // addFireworkWidget();
+                  setState(() {
+                    emojiFireWork.addFireworkWidget();
+                  });
                 },
                 child: const Text("Tap Button"),
               ),
@@ -62,22 +67,5 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage>
         ),
       ),
     );
-  }
-
-  void setFireworkWidget() {
-    setState(() {
-      final fireworkWidgetKey = UniqueKey();
-      // widget.fireworkWidgetList.add(FireworkWidget(key: fireworkWidgetKey));
-      widget.fireworkWidgets.addEntries(<Key, FireworkWidget>{
-        fireworkWidgetKey: FireworkWidget(
-          key: fireworkWidgetKey,
-          notifyWidgetIsDisposed: notifyWidgetIsDisposed,
-        )
-      }.entries);
-    });
-  }
-
-  void notifyWidgetIsDisposed(Key widgetKey) {
-    widget.fireworkWidgets.remove(widgetKey);
   }
 }

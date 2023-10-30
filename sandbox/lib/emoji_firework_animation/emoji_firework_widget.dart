@@ -2,9 +2,34 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+class EmojiFireWork {
+  EmojiFireWork({required this.emojiAsset});
+  final AssetImage emojiAsset;
+
+  late Map<Key, FireworkWidget> fireworkWidgets = {};
+
+  void addFireworkWidget() {
+    final fireworkWidgetKey = UniqueKey();
+
+    fireworkWidgets.addEntries(<Key, FireworkWidget>{
+      fireworkWidgetKey: FireworkWidget(
+        key: fireworkWidgetKey,
+        notifyWidgetIsDisposed: (Key widgetKey) {
+          fireworkWidgets.remove(widgetKey);
+        },
+        emojiAsset: emojiAsset,
+      )
+    }.entries);
+  }
+}
+
 class FireworkWidget extends StatefulWidget {
-  FireworkWidget({super.key, required this.notifyWidgetIsDisposed});
+  FireworkWidget(
+      {super.key,
+      required this.notifyWidgetIsDisposed,
+      required this.emojiAsset});
   Function notifyWidgetIsDisposed;
+  AssetImage emojiAsset;
   @override
   State<FireworkWidget> createState() => _FireworkWidgetState();
 }
@@ -90,6 +115,7 @@ class _FireworkWidgetState extends State<FireworkWidget>
         emojiFloatYAnimation: emojiFloatYAnimation,
         emojiShootAnimation: emojiShootAnimation,
         emojiLifeTimeAnimation: emojiLifeTimeAnimation,
+        emojiAsset: widget.emojiAsset,
       ),
     );
 
@@ -107,6 +133,7 @@ class _FireworkWidgetState extends State<FireworkWidget>
         children: List.generate(
           25,
           (index) => EmojiWidget(
+            emojiAsset: widget.emojiAsset,
             emojiFloatXAnimation: emojiFloatXAnimation,
             emojiFloatYAnimation: emojiFloatYAnimation,
             emojiShootAnimation: emojiShootAnimation,
@@ -124,8 +151,10 @@ class EmojiWidget extends StatefulWidget {
     required this.emojiFloatYAnimation,
     required this.emojiFloatXAnimation,
     required this.emojiLifeTimeAnimation,
+    required this.emojiAsset,
   });
 
+  final AssetImage emojiAsset;
   final Animation<double> emojiShootAnimation,
       emojiFloatYAnimation,
       emojiFloatXAnimation,
@@ -175,7 +204,7 @@ class EmojiWidgetState extends State<EmojiWidget> {
       child: Opacity(
         opacity: isEmojiTransparent ? 0.0 : 1.0,
         child: Image(
-          image: const AssetImage("images/heart_icon.png"),
+          image: widget.emojiAsset,
           width: 40 * emojiScale,
           height: 40 * emojiScale,
         ),
