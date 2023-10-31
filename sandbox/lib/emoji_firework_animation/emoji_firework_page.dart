@@ -9,16 +9,9 @@ class EmojiFireworkPage extends StatefulWidget {
   State<EmojiFireworkPage> createState() => _EmojiFireworkPageState();
 }
 
-class _EmojiFireworkPageState extends State<EmojiFireworkPage>
-    with TickerProviderStateMixin {
-  late Map<Key, FireworkWidget> fireworkWidgets = {};
+class _EmojiFireworkPageState extends State<EmojiFireworkPage> {
   EmojiFireWork emojiFireWork =
       EmojiFireWork(emojiAsset: const AssetImage('images/heart_icon.png'));
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +48,6 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage>
               bottom: 30,
               child: ElevatedButton(
                 onPressed: () {
-                  // addFireworkWidget();
                   setState(() {
                     emojiFireWork.addFireworkWidget();
                   });

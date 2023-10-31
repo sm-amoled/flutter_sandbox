@@ -36,35 +36,32 @@ class FireworkWidget extends StatefulWidget {
 
 class _FireworkWidgetState extends State<FireworkWidget>
     with TickerProviderStateMixin {
+  // 불꽃놀이에서 움직이는 각각의 위젯들을 담아두는 리스트
   late List<EmojiWidget> emojiWidgetList;
+  // 3가지 움직임을 위해, 3가지 AnimationController를 선언
   late final AnimationController emojiAnimationShootController,
       emojiAnimationFloatController,
       emojiAnimationLifeTimeController;
+  // AnimationController의 값에 대해 움직이는 double 값(Animation)들을 선언
   late final Animation<double> emojiShootAnimation,
       emojiFloatYAnimation,
       emojiFloatXAnimation,
       emojiLifeTimeAnimation;
+  // 애니메이션 지속 시간을 결정하는 변수
   late Duration _emojiLifetimeDuration = Duration(seconds: 5);
   late Duration _emojiShootDuration = Duration(seconds: 2);
 
-  void startAnimation() {
-    emojiAnimationShootController.forward(from: 0.0);
-    emojiAnimationFloatController.forward(from: 0.0);
-    emojiAnimationLifeTimeController.forward(from: 0.0);
-  }
+  final int emojiAmount = 30;
 
   @override
   void initState() {
     super.initState();
 
+    // 이모지가 폭죽처럼 발사되는 Animation 관련 값 초기화
     emojiAnimationShootController = AnimationController(
       vsync: this,
       duration: _emojiShootDuration,
     );
-    emojiAnimationFloatController = AnimationController(
-        vsync: this,
-        duration: Duration(seconds: _emojiLifetimeDuration.inSeconds));
-    // 이모지 퍼트리기
     emojiShootAnimation = Tween(begin: 0.0, end: 100.0).animate(CurvedAnimation(
       parent: emojiAnimationShootController,
       curve: Curves.easeOut,
@@ -73,7 +70,11 @@ class _FireworkWidgetState extends State<FireworkWidget>
       setState(() {});
     });
 
-    // 이모지 둥둥s
+    // 이모지가 하늘로 날아가는 Animation 관련 값 초기화
+    // 가로 움직임과 세로 움직임이 별개이기 때문에, Animation을 X와 Y로 분리하였음
+    emojiAnimationFloatController = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: _emojiLifetimeDuration.inSeconds));
     emojiFloatXAnimation = Tween(begin: 0.0, end: 10.0).animate(
       CurvedAnimation(
         parent: emojiAnimationFloatController,
@@ -93,6 +94,8 @@ class _FireworkWidgetState extends State<FireworkWidget>
       setState(() {});
     });
 
+    // 불꽃놀이 위젯 자체의 지속시간과 관련된 Animation 관련 값 초기화
+    // 여기에서 이모지 크기를 조정할 수 있는 값을 제공한다.
     emojiAnimationLifeTimeController =
         AnimationController(vsync: this, duration: _emojiLifetimeDuration);
     emojiLifeTimeAnimation = Tween(begin: 0.0, end: 1.0).animate(
@@ -103,23 +106,17 @@ class _FireworkWidgetState extends State<FireworkWidget>
     });
     emojiLifeTimeAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        // dispose();
-        widget.notifyWidgetIsDisposed(widget.key);
+        widget.notifyWidgetIsDisposed();
       }
     });
 
-    emojiWidgetList = List.generate(
-      50,
-      (index) => EmojiWidget(
-        emojiFloatXAnimation: emojiFloatXAnimation,
-        emojiFloatYAnimation: emojiFloatYAnimation,
-        emojiShootAnimation: emojiShootAnimation,
-        emojiLifeTimeAnimation: emojiLifeTimeAnimation,
-        emojiAsset: widget.emojiAsset,
-      ),
-    );
-
     startAnimation();
+  }
+
+  void startAnimation() {
+    emojiAnimationShootController.forward(from: 0.0);
+    emojiAnimationFloatController.forward(from: 0.0);
+    emojiAnimationLifeTimeController.forward(from: 0.0);
   }
 
   @override
@@ -131,7 +128,7 @@ class _FireworkWidgetState extends State<FireworkWidget>
         clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: List.generate(
-          25,
+          emojiAmount,
           (index) => EmojiWidget(
             emojiAsset: widget.emojiAsset,
             emojiFloatXAnimation: emojiFloatXAnimation,
