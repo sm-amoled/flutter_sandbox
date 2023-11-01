@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sandbox/camera/camera_intro_page.dart';
+import 'package:sandbox/camera/camera_page.dart';
+import 'package:sandbox/camera/reaction_enter_view.dart';
+import 'package:sandbox/camera/reaction_hub_view.dart';
 import 'package:sandbox/clap_button/clap_button_page.dart';
 import 'package:sandbox/emoji_firework_animation/emoji_firework_page.dart';
 
@@ -9,6 +13,8 @@ class Home extends StatelessWidget {
   final sandboxList = [
     (ClapButtonPage(), "Clap Button Animation"),
     (EmojiFireworkPage(), "Emoji Firework"),
+    (CameraIntroPage(), "Camera"),
+    (ReactionEnterView(), "Reaction View"),
   ];
   @override
   Widget build(BuildContext context) {

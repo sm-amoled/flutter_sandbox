@@ -14,11 +14,6 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage> {
       EmojiFireWork(emojiAsset: const AssetImage('images/heart_icon.png'));
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Emoji Firework")),
