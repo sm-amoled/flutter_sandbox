@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:sandbox/camera/emoji_picker_view.dart';
 import 'package:sandbox/camera/reaction_hub_view.dart';
+import 'package:sandbox/camera/text_sender_page.dart';
 
 class ReactionEnterView extends StatelessWidget {
   const ReactionEnterView({super.key});
@@ -35,6 +36,13 @@ class ReactionEnterView extends StatelessWidget {
                 onPressed: () async {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: ((context) => EmojiPickerView())));
+                },
+              ),
+              ElevatedButton(
+                child: Text("GO TO Text Sender"),
+                onPressed: () async {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => TextSenderPage())));
                 },
               ),
             ],

@@ -85,12 +85,24 @@ class _EmojiPickerViewState extends State<EmojiPickerView> {
                                                 final animationWidgetKey =
                                                     UniqueKey();
                                                 widgets.addEntries({
-                                                  animationWidgetKey:
-                                                      ShootEmojiWidget(
-                                                          key:
-                                                              animationWidgetKey,
-                                                          disposeWidgetFromParent:
-                                                              disposeWidget)
+                                                  animationWidgetKey: ShootEmojiWidget(
+                                                      key: animationWidgetKey,
+                                                      currentPos: Point(
+                                                          detail.globalPosition
+                                                              .dx,
+                                                          detail.globalPosition
+                                                              .dy),
+                                                      targetPos: Point(
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              2,
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height +
+                                                              50),
+                                                      disposeWidgetFromParent:
+                                                          disposeWidget)
                                                 }.entries);
                                               },
                                             );
@@ -138,8 +150,14 @@ class _EmojiPickerViewState extends State<EmojiPickerView> {
 }
 
 class ShootEmojiWidget extends StatefulWidget {
-  ShootEmojiWidget({super.key, required this.disposeWidgetFromParent});
+  ShootEmojiWidget(
+      {super.key,
+      required this.disposeWidgetFromParent,
+      required this.currentPos,
+      required this.targetPos});
   Function disposeWidgetFromParent;
+  Point currentPos;
+  Point targetPos;
 
   @override
   State<ShootEmojiWidget> createState() => _ShootEmojiWidgetState();
@@ -148,8 +166,10 @@ class ShootEmojiWidget extends StatefulWidget {
 class _ShootEmojiWidgetState extends State<ShootEmojiWidget>
     with TickerProviderStateMixin {
   late AnimationController _controller;
-  late var _animation;
+  late var _yAnimation, _xAnimation;
   late Function disposeWidgetFromParent;
+  late double targetXPos;
+  final double emojiSize = 50;
 
   @override
   void initState() {
@@ -157,11 +177,15 @@ class _ShootEmojiWidgetState extends State<ShootEmojiWidget>
     super.initState();
     disposeWidgetFromParent = widget.disposeWidgetFromParent;
 
-    _controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 3));
-    _animation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    _controller = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1500));
+    _yAnimation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeOut,
+    ));
+    _xAnimation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
     ));
     // _animation = Tween<double>(begin: 0, end: 1).animate(_controller, );
     _controller.forward(from: 0.0);
@@ -174,6 +198,7 @@ class _ShootEmojiWidgetState extends State<ShootEmojiWidget>
       if (status == AnimationStatus.completed) {
         disposeWidgetFromParent(widget.key);
         // dispose();
+        // super.dispose();
       }
     });
   }
@@ -188,10 +213,14 @@ class _ShootEmojiWidgetState extends State<ShootEmojiWidget>
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: _animation.value * 500 + 400,
+      bottom: (widget.targetPos.y * 1.0 * _yAnimation.value) +
+          (400) * (1 - _yAnimation.value),
+      left: widget.targetPos.x.toDouble() * _xAnimation.value +
+          (widget.currentPos.x.toDouble()) * (1 - _xAnimation.value) -
+          emojiSize / 2,
       child: Image(
-        width: 50,
-        height: 50,
+        width: emojiSize,
+        height: emojiSize,
         image: AssetImage("images/heart_icon.png"),
       ),
     );
