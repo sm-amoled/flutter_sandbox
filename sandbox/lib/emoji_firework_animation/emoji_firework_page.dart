@@ -54,7 +54,7 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage> {
               child: ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    emojiFireWork.addFireworkWidget();
+                    emojiFireWork.addFireworkWidget(Offset.zero);
                   });
                 },
                 child: const Text("Tap Button"),

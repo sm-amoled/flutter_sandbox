@@ -15,6 +15,13 @@ class _BalloonPageState extends ConsumerState<BalloonPage> {
   late Map<Key, BalloonWidget> _balloonWidgets;
   late BalloonManager _balloonManager;
 
+  EmojiFireWork emojiFireWork =
+      EmojiFireWork(emojiAsset: const AssetImage('images/heart_icon.png'));
+
+  void callBackFunction(Offset offset) {
+    emojiFireWork.addFireworkWidget(offset);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -26,6 +33,7 @@ class _BalloonPageState extends ConsumerState<BalloonPage> {
 
     _balloonWidgets = ref.watch(balloonManagerProvider);
     _balloonManager = ref.read(balloonManagerProvider.notifier);
+    _balloonManager.callback = callBackFunction;
   }
 
   @override
@@ -50,6 +58,12 @@ class _BalloonPageState extends ConsumerState<BalloonPage> {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
+                  IgnorePointer(
+                    child: Stack(
+                      clipBehavior: Clip.hardEdge,
+                      children: emojiFireWork.fireworkWidgets.values.toList(),
+                    ),
+                  ),
                   Stack(
                     children: _balloonWidgets.values.toList(),
                   ),
@@ -72,7 +86,6 @@ class _BalloonPageState extends ConsumerState<BalloonPage> {
               child: ElevatedButton(
                 onPressed: () {
                   setState(() {});
-                  print(_balloonWidgets);
                 },
                 child: Text(_balloonWidgets.length.toString()),
               ),

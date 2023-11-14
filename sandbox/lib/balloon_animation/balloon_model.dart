@@ -13,6 +13,8 @@ final balloonManagerProvider =
 class BalloonManager extends StateNotifier<Map<Key, BalloonWidget>> {
   BalloonManager() : super({});
 
+  late Function callback;
+
   void addBalloon() {
     final balloonWidgetKey = UniqueKey();
 
@@ -22,6 +24,7 @@ class BalloonManager extends StateNotifier<Map<Key, BalloonWidget>> {
         notifyWidgetIsDisposed: (Key widgetKey) {
           state = Map.of(state..remove(widgetKey));
         },
+        getTappedPosition: callback,
       ),
     }.entries);
   }
@@ -31,11 +34,13 @@ class BalloonWidget extends StatefulWidget {
   BalloonWidget({
     required this.key,
     required this.notifyWidgetIsDisposed,
+    required this.getTappedPosition,
   });
 
   @override
   Key key;
   Function notifyWidgetIsDisposed;
+  Function getTappedPosition;
 
   @override
   State<BalloonWidget> createState() => _BalloonWidgetState();
@@ -85,9 +90,8 @@ class _BalloonWidgetState extends State<BalloonWidget>
     height = MediaQuery.of(context).size.height;
 
     balloonModel = Balloon(
-      x: Random().nextDouble() * width,
-      y: Random().nextDouble() * height,
-      windDirection: Random().nextBool() ? 1 : -1,
+      x: 50 + Random().nextDouble() * (width - 100 - 130),
+      y: 100 + Random().nextDouble() * (height - 200 - 130),
     );
 
     _startAnimation();
@@ -108,7 +112,12 @@ class _BalloonWidgetState extends State<BalloonWidget>
 
   void notifyWidgetIsDisposed() {
     _animationController.dispose();
-    // dispose();
+    widget.getTappedPosition(
+      Offset(
+        balloonModel.x + 50 * sin(_animation.value) + 65, // radius of photo
+        balloonModel.y + 25 * cos(_animation.value) + 65, // radius of photo
+      ),
+    );
     widget.notifyWidgetIsDisposed(widget.key);
   }
 }
@@ -154,11 +163,9 @@ class BalloonParticle extends StatelessWidget {
 class Balloon {
   double x;
   double y;
-  final int windDirection;
 
   Balloon({
     required this.x,
     required this.y,
-    required this.windDirection,
   });
 }

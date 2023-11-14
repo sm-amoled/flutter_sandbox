@@ -8,15 +8,16 @@ class EmojiFireWork {
 
   late Map<Key, FireworkWidget> fireworkWidgets = {};
 
-  void addFireworkWidget() {
+  void addFireworkWidget(Offset offset) {
     final fireworkWidgetKey = UniqueKey();
 
     fireworkWidgets.addEntries(<Key, FireworkWidget>{
       fireworkWidgetKey: FireworkWidget(
         key: fireworkWidgetKey,
-        notifyWidgetIsDisposed: (Key widgetKey) {
+        notifyWidgetIsDisposed: (UniqueKey widgetKey) {
           fireworkWidgets.remove(widgetKey);
         },
+        offset: offset,
         emojiAsset: emojiAsset,
       )
     }.entries);
@@ -24,12 +25,16 @@ class EmojiFireWork {
 }
 
 class FireworkWidget extends StatefulWidget {
-  FireworkWidget(
-      {super.key,
-      required this.notifyWidgetIsDisposed,
-      required this.emojiAsset});
+  FireworkWidget({
+    super.key,
+    required this.notifyWidgetIsDisposed,
+    required this.offset,
+    required this.emojiAsset,
+  });
   Function notifyWidgetIsDisposed;
   AssetImage emojiAsset;
+  Offset offset;
+
   @override
   State<FireworkWidget> createState() => _FireworkWidgetState();
 }
@@ -64,7 +69,7 @@ class _FireworkWidgetState extends State<FireworkWidget>
     );
     emojiShootAnimation = Tween(begin: 0.0, end: 100.0).animate(CurvedAnimation(
       parent: emojiAnimationShootController,
-      curve: Curves.easeOut,
+      curve: Curves.easeOutCubic,
     ));
     emojiShootAnimation.addListener(() {
       setState(() {});
@@ -84,7 +89,7 @@ class _FireworkWidgetState extends State<FireworkWidget>
     emojiFloatXAnimation.addListener(() {
       setState(() {});
     });
-    emojiFloatYAnimation = Tween(begin: -50.0, end: 1000.0).animate(
+    emojiFloatYAnimation = Tween(begin: -50.0, end: 2000.0).animate(
       CurvedAnimation(
         parent: emojiAnimationFloatController,
         curve: Curves.easeIn,
@@ -106,7 +111,7 @@ class _FireworkWidgetState extends State<FireworkWidget>
     });
     emojiLifeTimeAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        widget.notifyWidgetIsDisposed();
+        widget.notifyWidgetIsDisposed(widget.key);
       }
     });
 
@@ -121,20 +126,24 @@ class _FireworkWidgetState extends State<FireworkWidget>
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 50,
-      height: 50,
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
-        children: List.generate(
-          emojiAmount,
-          (index) => EmojiWidget(
-            emojiAsset: widget.emojiAsset,
-            emojiFloatXAnimation: emojiFloatXAnimation,
-            emojiFloatYAnimation: emojiFloatYAnimation,
-            emojiShootAnimation: emojiShootAnimation,
-            emojiLifeTimeAnimation: emojiLifeTimeAnimation,
+    return Container(
+      constraints: BoxConstraints.expand(),
+      child: SizedBox(
+        width: 50,
+        height: 50,
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
+          children: List.generate(
+            emojiAmount,
+            (index) => EmojiWidget(
+              offset: widget.offset,
+              emojiAsset: widget.emojiAsset,
+              emojiFloatXAnimation: emojiFloatXAnimation,
+              emojiFloatYAnimation: emojiFloatYAnimation,
+              emojiShootAnimation: emojiShootAnimation,
+              emojiLifeTimeAnimation: emojiLifeTimeAnimation,
+            ),
           ),
         ),
       ),
@@ -149,6 +158,7 @@ class EmojiWidget extends StatefulWidget {
     required this.emojiFloatXAnimation,
     required this.emojiLifeTimeAnimation,
     required this.emojiAsset,
+    required this.offset,
   });
 
   final AssetImage emojiAsset;
@@ -156,6 +166,7 @@ class EmojiWidget extends StatefulWidget {
       emojiFloatYAnimation,
       emojiFloatXAnimation,
       emojiLifeTimeAnimation;
+  final Offset offset;
 
   @override
   State<EmojiWidget> createState() => EmojiWidgetState();
@@ -184,8 +195,10 @@ class EmojiWidgetState extends State<EmojiWidget> {
         ? 0
         : widget.emojiFloatYAnimation.value * -1;
 
-    var emojiAnimationPositionX = emojiAnimationShootX + emojiAnimationFloatX;
-    var emojiAnimationPositionY = emojiAnimationShootY + emojiAnimationFloatY;
+    var emojiAnimationPositionX =
+        widget.offset.dx + emojiAnimationShootX + emojiAnimationFloatX;
+    var emojiAnimationPositionY =
+        widget.offset.dy + emojiAnimationShootY + emojiAnimationFloatY;
 
     var emojiScale = sin(
                 (widget.emojiLifeTimeAnimation.value + distinctiveRandomSeed) *
