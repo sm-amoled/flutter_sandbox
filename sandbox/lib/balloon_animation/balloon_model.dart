@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:riverpod/riverpod.dart';
@@ -15,12 +14,13 @@ class BalloonManager extends StateNotifier<Map<Key, BalloonWidget>> {
 
   late Function callback;
 
-  void addBalloon() {
+  void addBalloon({required String imageUrl}) {
     final balloonWidgetKey = UniqueKey();
 
     state.addEntries(<Key, BalloonWidget>{
       balloonWidgetKey: BalloonWidget(
         key: balloonWidgetKey,
+        imageUrl: imageUrl,
         notifyWidgetIsDisposed: (Key widgetKey) {
           state = Map.of(state..remove(widgetKey));
         },
@@ -31,16 +31,16 @@ class BalloonManager extends StateNotifier<Map<Key, BalloonWidget>> {
 }
 
 class BalloonWidget extends StatefulWidget {
-  BalloonWidget({
-    required this.key,
+  const BalloonWidget({
+    required super.key,
+    required this.imageUrl,
     required this.notifyWidgetIsDisposed,
     required this.getTappedPosition,
   });
 
-  @override
-  Key key;
-  Function notifyWidgetIsDisposed;
-  Function getTappedPosition;
+  final String imageUrl;
+  final Function notifyWidgetIsDisposed;
+  final Function getTappedPosition;
 
   @override
   State<BalloonWidget> createState() => _BalloonWidgetState();
@@ -52,7 +52,6 @@ class _BalloonWidgetState extends State<BalloonWidget>
   late AnimationController _animationController;
   late Animation _animation;
 
-  late Timer _timer;
   double wind = 0.1;
   double speed = 0.1;
 
@@ -106,6 +105,7 @@ class _BalloonWidgetState extends State<BalloonWidget>
     return BalloonParticle(
       x: balloonModel.x + 50 * sin(_animation.value),
       y: balloonModel.y + 25 * cos(_animation.value),
+      imageUrl: widget.imageUrl,
       notifyWidgetIsDisposed: notifyWidgetIsDisposed,
     );
   }
@@ -123,16 +123,19 @@ class _BalloonWidgetState extends State<BalloonWidget>
 }
 
 class BalloonParticle extends StatelessWidget {
-  Function notifyWidgetIsDisposed;
-  BalloonParticle({
+  const BalloonParticle({
     super.key,
     required this.x,
     required this.y,
+    required this.imageUrl,
     required this.notifyWidgetIsDisposed,
   });
 
-  double x;
-  double y;
+  final double x;
+  final double y;
+  final String imageUrl;
+
+  final Function notifyWidgetIsDisposed;
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +155,8 @@ class BalloonParticle extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: Image(
-            image: AssetImage("images/clap.png"),
+            fit: BoxFit.cover,
+            image: NetworkImage(imageUrl),
           ),
         ),
       ),

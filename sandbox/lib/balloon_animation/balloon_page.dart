@@ -1,12 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sandbox/balloon_animation/balloon_model.dart';
 import 'package:sandbox/emoji_firework_animation/emoji_firework_widget.dart';
 
 class BalloonPage extends ConsumerStatefulWidget {
-  BalloonPage({super.key});
+  const BalloonPage({super.key});
   @override
   ConsumerState<BalloonPage> createState() => _BalloonPageState();
 }
@@ -41,9 +39,9 @@ class _BalloonPageState extends ConsumerState<BalloonPage> {
     _balloonWidgets = ref.watch(balloonManagerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Emoji Firework")),
+      appBar: AppBar(title: const Text("Emoji Firework")),
       body: Container(
-        constraints: BoxConstraints.expand(),
+        constraints: const BoxConstraints.expand(),
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -54,7 +52,7 @@ class _BalloonPageState extends ConsumerState<BalloonPage> {
               ),
             ),
             Container(
-              constraints: BoxConstraints.expand(),
+              constraints: const BoxConstraints.expand(),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -75,7 +73,9 @@ class _BalloonPageState extends ConsumerState<BalloonPage> {
               child: ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    _balloonManager.addBalloon();
+                    _balloonManager.addBalloon(
+                        imageUrl:
+                            "https://avatars.githubusercontent.com/u/39216546?s=40&v=4");
                   });
                 },
                 child: const Text("Tap Button"),

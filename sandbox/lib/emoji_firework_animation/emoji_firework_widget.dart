@@ -25,15 +25,15 @@ class EmojiFireWork {
 }
 
 class FireworkWidget extends StatefulWidget {
-  FireworkWidget({
+  const FireworkWidget({
     super.key,
     required this.notifyWidgetIsDisposed,
     required this.offset,
     required this.emojiAsset,
   });
-  Function notifyWidgetIsDisposed;
-  AssetImage emojiAsset;
-  Offset offset;
+  final Function notifyWidgetIsDisposed;
+  final AssetImage emojiAsset;
+  final Offset offset;
 
   @override
   State<FireworkWidget> createState() => _FireworkWidgetState();
@@ -53,8 +53,8 @@ class _FireworkWidgetState extends State<FireworkWidget>
       emojiFloatXAnimation,
       emojiLifeTimeAnimation;
   // 애니메이션 지속 시간을 결정하는 변수
-  late Duration _emojiLifetimeDuration = Duration(seconds: 5);
-  late Duration _emojiShootDuration = Duration(seconds: 2);
+  late final Duration _emojiLifetimeDuration = const Duration(seconds: 5);
+  late final Duration _emojiShootDuration = const Duration(seconds: 2);
 
   final int emojiAmount = 30;
 
@@ -127,7 +127,7 @@ class _FireworkWidgetState extends State<FireworkWidget>
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints.expand(),
+      constraints: const BoxConstraints.expand(),
       child: SizedBox(
         width: 50,
         height: 50,
@@ -153,6 +153,7 @@ class _FireworkWidgetState extends State<FireworkWidget>
 
 class EmojiWidget extends StatefulWidget {
   const EmojiWidget({
+    super.key,
     required this.emojiShootAnimation,
     required this.emojiFloatYAnimation,
     required this.emojiFloatXAnimation,
