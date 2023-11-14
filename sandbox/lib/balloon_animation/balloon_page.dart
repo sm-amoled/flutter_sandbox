@@ -74,7 +74,7 @@ class _BalloonPageState extends ConsumerState<BalloonPage> {
                   setState(() {});
                   print(_balloonWidgets);
                 },
-                child: const Text("Tap Button"),
+                child: Text(_balloonWidgets.length.toString()),
               ),
             ),
           ],

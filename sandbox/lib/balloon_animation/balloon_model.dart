@@ -20,7 +20,7 @@ class BalloonManager extends StateNotifier<Map<Key, BalloonWidget>> {
       balloonWidgetKey: BalloonWidget(
         key: balloonWidgetKey,
         notifyWidgetIsDisposed: (Key widgetKey) {
-          state.remove(widgetKey);
+          state = Map.of(state..remove(widgetKey));
         },
       ),
     }.entries);
@@ -32,6 +32,7 @@ class BalloonWidget extends StatefulWidget {
     required this.key,
     required this.notifyWidgetIsDisposed,
   });
+
   @override
   Key key;
   Function notifyWidgetIsDisposed;
@@ -68,7 +69,6 @@ class _BalloonWidgetState extends State<BalloonWidget>
 
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        // widget.notifyWidgetIsDisposed();
         _animationController.repeat();
       }
     });
@@ -107,10 +107,9 @@ class _BalloonWidgetState extends State<BalloonWidget>
   }
 
   void notifyWidgetIsDisposed() {
-    print("DISPISING");
     _animationController.dispose();
+    // dispose();
     widget.notifyWidgetIsDisposed(widget.key);
-    super.dispose();
   }
 }
 
@@ -136,11 +135,15 @@ class BalloonParticle extends StatelessWidget {
           notifyWidgetIsDisposed();
         },
         child: Container(
+          clipBehavior: Clip.hardEdge,
           width: 130,
           height: 130,
           decoration: const BoxDecoration(
             color: Colors.amber,
             shape: BoxShape.circle,
+          ),
+          child: Image(
+            image: AssetImage("images/clap.png"),
           ),
         ),
       ),
