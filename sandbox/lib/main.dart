@@ -1,5 +1,7 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sandbox/camera/camera_page.dart';
 import 'package:sandbox/home.dart';
 
 void main() {
