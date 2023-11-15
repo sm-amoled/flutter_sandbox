@@ -16,10 +16,6 @@ class _BalloonPageState extends ConsumerState<BalloonPage> {
   EmojiFireWork emojiFireWork =
       EmojiFireWork(emojiAsset: const AssetImage('images/heart_icon.png'));
 
-  void callBackFunction(Offset offset) {
-    emojiFireWork.addFireworkWidget(offset);
-  }
-
   @override
   void initState() {
     super.initState();
@@ -31,7 +27,7 @@ class _BalloonPageState extends ConsumerState<BalloonPage> {
 
     _balloonWidgets = ref.watch(balloonManagerProvider);
     _balloonManager = ref.read(balloonManagerProvider.notifier);
-    _balloonManager.callback = callBackFunction;
+    _balloonManager.onTapCallbackWithTappedPositionOffset = callBackFunction;
   }
 
   @override
@@ -94,5 +90,9 @@ class _BalloonPageState extends ConsumerState<BalloonPage> {
         ),
       ),
     );
+  }
+
+  void callBackFunction(Offset offset) {
+    emojiFireWork.addFireworkWidget(offset);
   }
 }

@@ -31,9 +31,8 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage> {
                 color: Colors.black26,
               ),
             ),
-            Positioned(
-              width: 200,
-              height: 200,
+            Container(
+              constraints: const BoxConstraints.expand(),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
