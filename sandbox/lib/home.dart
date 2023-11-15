@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sandbox/balloon_animation/balloon_page.dart';
 import 'package:sandbox/camera/camera_intro_page.dart';
 import 'package:sandbox/camera/camera_page.dart';
 import 'package:sandbox/camera/reaction_enter_view.dart';
@@ -15,6 +16,7 @@ class Home extends StatelessWidget {
     (EmojiFireworkPage(), "Emoji Firework"),
     (CameraIntroPage(), "Camera"),
     (ReactionEnterView(), "Reaction View"),
+    (BalloonPage(), "Balloon"),
   ];
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,15 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sandbox/camera/camera_page.dart';
 import 'package:sandbox/home.dart';
 
-Future<void> main() async {
-  runApp(const MainApp());
+void main() {
+  runApp(
+    const ProviderScope(
+      child: MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {

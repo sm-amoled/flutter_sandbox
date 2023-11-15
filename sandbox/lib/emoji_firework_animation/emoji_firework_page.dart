@@ -1,10 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:sandbox/emoji_firework_animation/emoji_firework_widget.dart';
 
 class EmojiFireworkPage extends StatefulWidget {
-  EmojiFireworkPage({super.key});
+  const EmojiFireworkPage({super.key});
   @override
   State<EmojiFireworkPage> createState() => _EmojiFireworkPageState();
 }
@@ -16,9 +14,9 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Emoji Firework")),
+      appBar: AppBar(title: const Text("Emoji Firework")),
       body: Container(
-        constraints: BoxConstraints.expand(),
+        constraints: const BoxConstraints.expand(),
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -28,9 +26,8 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage> {
                 color: Colors.black26,
               ),
             ),
-            Positioned(
-              width: 200,
-              height: 200,
+            Container(
+              constraints: const BoxConstraints.expand(),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -49,7 +46,7 @@ class _EmojiFireworkPageState extends State<EmojiFireworkPage> {
               child: ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    emojiFireWork.addFireworkWidget();
+                    emojiFireWork.addFireworkWidget(Offset.zero);
                   });
                 },
                 child: const Text("Tap Button"),
